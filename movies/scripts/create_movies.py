@@ -60,7 +60,15 @@ def get_info(url):
             movie.save()
 
 
+def delete_all():
+    # Fetch all movies
+    movies = Movie.objects.all()
+    # Delete movies
+    movies.delete()
+
+
 def run():
+    delete_all()
     url_seances = 'http://www.allocine.fr/film/aucinema/date-sortie/'
     get_info(url_seances)
 

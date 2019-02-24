@@ -6,7 +6,7 @@ from movies.models import Theater
 link_theaters = "http://www.allocine.fr/recherche/2/"
 
 
-def get_theaters(page):
+def get_paris_theaters(page):
     payload = {'p': page,
                'q': "paris arrondissement"
                }
@@ -34,4 +34,4 @@ def get_theaters(page):
 def run():
     total_pages = 6
     for current_page in range(1, total_pages+1):
-        get_theaters(current_page)
+        get_paris_theaters(current_page)
