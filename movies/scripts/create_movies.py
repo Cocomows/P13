@@ -2,7 +2,7 @@ import json
 import requests
 from bs4 import BeautifulSoup
 from movies.models import Movie
-
+from datetime import datetime, timedelta
 
 def get_number_of_pages(url):
     page = 99
@@ -55,9 +55,18 @@ def get_info(url):
             for link in img_links:
                 if partial_poster_link in link:
                     poster_link = link
+            today = datetime.now()
 
-            movie = Movie(allocine_code=allocine_id, title=title, poster_url=poster_link, release_date=release_date)
-            movie.save()
+            release_date_cut = release_date[:-6]
+
+            datetime_release = datetime.strptime(release_date_cut, "%Y-%m-%dT%H:%M:%S")
+
+            date_N_days_ago = today - timedelta(days=180)
+
+            if datetime_release < date_N_days_ago:
+                # print(release_date+" - "+str(datetime_release)+" - "+title)
+                movie = Movie(allocine_code=allocine_id, title=title, poster_url=poster_link, release_date=release_date)
+                movie.save()
 
 
 def delete_all():
