@@ -3,21 +3,33 @@
 {% block content %}
 <h1>Movies list</h1>
 
-
+<div class="container">
+    <div class="row">
     {% for movie in movies %}
-        <article class="media content-section">
-          <div class="media-body">
-            <div class="article-metadata">
-                <small class="text-muted">{{ movie.release_date|date:"F d, Y" }}</small>
-            </div>
-            <h2>{{ movie.title }}</h2>
-            <p class="article-content"><img src="{{ movie.poster_url}}" alt="" class="">
-                <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" target="_blank">Voir les séances sur Allociné</a>
-            </p>
+        <div class="col-lg-4 col-md-4 text-center">
+            <div class="service-box mt-5 mx-auto">
+                <article class="media content-section">
+                  <div class="media-body">
+                    <div class="article-metadata">
+                        <small class="text-muted">{{ movie.release_date|date:"F d, Y" }}</small>
+                    </div>
+                  <img src="{{ movie.poster_url}}" alt="" class="poster">
 
-          </div>
-        </article>
+                    <h3>{{ movie.title }}</h3>
+                    <p class="article-content">
+                        <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" target="_blank">Voir les séances sur Allociné</a>
+                    </p>
+
+                  </div>
+                </article>
+            </div>
+        </div>
+    {% if forloop.counter|divisibleby:3 %}
+    </div>
+    <div class="row">
+    {% endif %}
     {% endfor %}
+</div>
     {% if is_paginated %}
 
       {% if page_obj.has_previous %}
