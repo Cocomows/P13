@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 import re
 from movies.models import Theater
 
+# run with :
+# python manage.py runscript create_movies
+
+
 link_theaters = "http://www.allocine.fr/recherche/2/"
 
 

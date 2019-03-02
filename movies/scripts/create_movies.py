@@ -4,6 +4,10 @@ from bs4 import BeautifulSoup
 from movies.models import Movie
 from datetime import datetime, timedelta
 
+# run with :
+# python manage.py runscript create_movies
+
+
 def get_number_of_pages(url):
     page = 99
     payload = {'page': str(page),
