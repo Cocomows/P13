@@ -22,3 +22,17 @@ class Theater(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Showing(models.Model):
+
+    class Meta:
+        unique_together = (('theater', 'movie'),)
+
+    movie = models.ForeignKey(Movie, verbose_name="Film diffusé", on_delete=models.CASCADE,)
+    theater = models.ForeignKey(Theater, verbose_name="Diffusé à", on_delete=models.CASCADE,)
+
+    def __str__(self):
+        return str(self.theater).capitalize()+"diffuse le film"+str(self.movie)
+
+1
