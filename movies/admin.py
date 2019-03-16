@@ -17,6 +17,7 @@ class MovieAdmin(admin.ModelAdmin):
 class MovieAdmin(admin.ModelAdmin):
     list_display = ('name', 'address')
 
+
 @admin.register(Showing)
 class MovieAdmin(admin.ModelAdmin):
     list_display = ('movie', 'theater')
