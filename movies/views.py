@@ -23,4 +23,4 @@ class MovieListView(ListView):
     template_name = 'movies/home.html'  # <app>/<model>_<viewtype>.html
     context_object_name = 'movies'
     ordering = ['release_date']
-    paginate_by = 5
+    paginate_by = 6
