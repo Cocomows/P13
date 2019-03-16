@@ -7,7 +7,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-from .models import Movie
+from .models import Movie, Showing
 # Create your views here.
 
 
@@ -18,9 +18,17 @@ from .models import Movie
 #     return render(request, 'movies/home.html', context=context)
 #
 
-class MovieListView(ListView):
-    model = Movie
+class ShowingsListView(ListView):
+    model = Showing
     template_name = 'movies/home.html'  # <app>/<model>_<viewtype>.html
-    context_object_name = 'movies'
-    ordering = ['release_date']
-    paginate_by = 6
+    context_object_name = 'showings'
+    # ordering = Showing.movie.release_date
+    paginate_by = 8
+
+#
+# class MovieListView(ListView):
+#     model = Movie
+#     template_name = 'movies/home.html'  # <app>/<model>_<viewtype>.html
+#     context_object_name = 'movies'
+#     ordering = ['release_date']
+#     paginate_by = 8

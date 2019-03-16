@@ -1,35 +1,48 @@
 {% extends "movies/layouts/base.html" %}
 
 {% block content %}
-<h1>Movies list</h1>
 
+    <!-- Jumbotron Header -->
+
+    {% if is_paginated and page_obj.number == 1 %}
+
+    <header class="jumbotron my-4">
+      <h1 class="display-3">Bienvenue sur <strong>Après dernière</strong> !</h1>
+      <p class="lead">Retrouvez la liste des films repassant au cinéma après leur dernière séance.</p>
+      <a href="#" class="btn btn-primary btn-lg">Call to action!</a>
+    </header>
+    {% endif %}
+
+    <!-- Page Features -->
 <div class="container">
-    <div class="row">
-    {% for movie in movies %}
-        <div class="col-lg-4 col-md-4 text-center">
-            <div class="service-box mt-5 mx-auto">
-                <article class="media content-section">
-                  <div class="media-body">
-                    <div class="article-metadata">
-                        <small class="text-muted">{{ movie.release_date|date:"F d, Y" }}</small>
-                    </div>
-                  <img src="{{ movie.poster_url}}" alt="" class="poster">
-
-                    <h3>{{ movie.title }}</h3>
-                    <p class="article-content">
-                        <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" target="_blank">Voir les séances sur Allociné</a>
-                    </p>
-
-                  </div>
-                </article>
-            </div>
+    <div class="row text-center">
+    {% for showing in showings %}
+      <div class="col-lg-3 col-md-6 mb-4">
+        <div class="card h-100">
+          <img class="card-img-top" src="{{ showing.movie.poster_url}}" alt="">
+          <div class="card-body">
+            <h4 class="card-title">{{ showing.movie.title }}</h4>
+            <p class="card-text">
+                <small class="text-muted">{{ showing.movie.release_date|date:"F d, Y" }}</small>
+            </p>
+          </div>
+          <div class="card-footer">
+              <a href="http://www.allocine.fr/seance/film-{{ showing.movie.allocine_code}}/toutes/" class="btn btn-primary" target="_blank">Voir les séances sur Allociné</a>
+          </div>
         </div>
-    {% if forloop.counter|divisibleby:3 %}
+      </div>
+    {% if forloop.counter|divisibleby:4 %}
     </div>
-    <div class="row">
+    <div class="row text-center">
     {% endif %}
     {% endfor %}
+    </div>
 </div>
+
+
+
+
+
     {% if is_paginated %}
 
       {% if page_obj.has_previous %}
