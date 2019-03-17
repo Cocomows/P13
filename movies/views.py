@@ -16,11 +16,24 @@ def home(request):
     # showings_list = Showing.objects.all()
     movies_list = Movie.objects.filter(showing__movie__isnull=False).order_by('release_date').distinct()
 
-    paginator = Paginator(movies_list, 8)
+    paginator = Paginator(movies_list, 12)
 
     page = request.GET.get('page')
     movies = paginator.get_page(page)
     return render(request, 'movies/home.html', {'movies': movies, 'is_paginated': True})
+
+
+def search(request):
+
+    query = request.GET.get('query')
+
+    if not query:
+
+        movies = Movie.objects.all()
+    else:
+        movies = Movie.objects.filter(title__icontains=query)
+
+    return render(request, 'movies/results.html', {'movies': movies, 'is_paginated': True, 'query': query})
 
 #
 # class ShowingsListView(ListView):

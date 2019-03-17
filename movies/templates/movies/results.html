@@ -1,23 +1,18 @@
 {% extends "movies/layouts/base.html" %}
 {% load static %}
 {% block content %}
+<h1>Résultats de la recherche</h1>
 
-    <!-- Jumbotron Header -->
-
-    {% if is_paginated and movies.number == 1 %}
-
-    <header class="jumbotron my-4">
-      <h2 class="display-4">Bienvenue sur <strong>Après dernière</strong> !</h2>
-      <p class="lead">Retrouvez la liste des films repassant au cinéma après leur dernière séance.</p>
-      <a href="#" class="btn btn-primary btn-lg">Call to action!</a>
-    </header>
-    {% endif %}
-
+{% if not movies %}
+<div class="container">
+    Nous n'avons pas de résultat de film correspondant à la recherche {{ query}}.
+</div>
+{% else %}
     <!-- Page Features -->
 <div class="container">
     <div class="row text-center">
     {% for movie in movies %}
-      <div class="col-lg-2 col-md-6 mb-4">
+      <div class="col-lg-3 col-md-6 mb-4">
         <div class="card h-100">
             {% if movie.poster_url %}
             <img class="card-img-top" src="{{ movie.poster_url }}" alt="">
@@ -36,7 +31,7 @@
           </div>
         </div>
       </div>
-    {% if forloop.counter|divisibleby:6 %}
+    {% if forloop.counter|divisibleby:4 %}
     </div>
     <div class="row text-center">
     {% endif %}
@@ -68,6 +63,6 @@
         <a class="btn btn-outline-info mb-4" href="?page={{ movies.paginator.num_pages }}">>|</a>
       {% endif %}
 
+    {% endif %}
 {% endif %}
-
 {% endblock content %}
