@@ -8,16 +8,20 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">Cinéma</th>
-          <th scope="col">Nombre d'anciens films diffusés</th>
+            <th scope="col">Cinéma <div class="text-muted">cliquer pour voir le cinéma sur allociné</m></div></th>
+            <th scope="col">Nombre d'anciens films diffusés</th>
+            <th scope="col" class="text-muted">Adresse</th>
+
         </tr>
       </thead>
       <tbody>
 
     {% for theater in theaters %}
         <tr>
-          <td>{{ theater }}</td>
-          <td>{{ theater.number_of_showings}}</td>
+          <td><a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">{{ theater }}</a></td>
+          <td class="text-center">{{ theater.number_of_showings}} (<a href="{% url 'theater' %}?theater={{theater.theater_code}}">Voir la liste</a>)</td>
+          <td class="text-muted">{{ theater.address}}</td>
+
     {% endfor %}
         </tr>
 

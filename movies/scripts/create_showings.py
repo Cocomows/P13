@@ -25,7 +25,15 @@ def get_showings(theater_code):
             print("movie not in base or showing already present")
 
 
+def delete_all():
+    # Fetch all movies
+    showings = Showing.objects.all()
+    # Delete movies
+    showings.delete()
+
+
 def run():
+    delete_all()
     for theater in Theater.objects.all():
         print(theater)
         print(theater.theater_code)

@@ -2,22 +2,17 @@
 {% load static %}
 {% block content %}
 
-    <!-- Jumbotron Header -->
-
-    {% if is_paginated and movies.number == 1 %}
-
-    <header class="jumbotron my-4">
-      <h4 class="display-4">Bienvenue sur <strong>Après dernière</strong> !</h4>
-      <p class="lead">Retrouvez la liste des films repassant au cinéma après leur dernière séance.</p>
-
-    </header>
-    {% endif %}
+<h2>Anciens films diffusés au cinéma <a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">{{ theater }}</a></h2>
+<div class="container">
+    <div class="row text-center"><h3><a href="{% url 'theaters' %}">Revenir à la liste des cinémas</a></h3>
+    </div>
+</div>
 
     <!-- Page Features -->
 <div class="container">
     <div class="row text-center">
     {% for movie in movies %}
-      <div class="col-lg-2 col-md-6 mb-4">
+      <div class="col-lg-3 col-md-6 mb-4">
         <div class="card h-100">
             {% if movie.poster_url %}
             <img class="card-img-top" src="{{ movie.poster_url }}" alt="">
@@ -36,7 +31,7 @@
           </div>
         </div>
       </div>
-    {% if forloop.counter|divisibleby:6 %}
+    {% if forloop.counter|divisibleby:4 %}
     </div>
     <div class="row text-center">
     {% endif %}
@@ -51,23 +46,23 @@
     {% if is_paginated %}
 
       {% if movies.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?page=1">|<</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ movies.previous_page_number }}"><</a>
+        <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page=1">|<</a>
+        <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page={{ movies.previous_page_number }}"><</a>
       {% endif %}
 
       {% for num in movies.paginator.page_range %}
         {% if movies.number == num %}
-          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          <a class="btn btn-info mb-4" href="?theater={{ theater.theater_code}}&page={{ num }}">{{ num }}</a>
         {% elif num > movies.number|add:'-3' and num < movies.number|add:'3' %}
-          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+          <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page={{ num }}">{{ num }}</a>
         {% endif %}
       {% endfor %}
 
       {% if movies.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ movies.next_page_number }}">></a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ movies.paginator.num_pages }}">>|</a>
+        <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page={{ movies.next_page_number }}">></a>
+        <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page={{ movies.paginator.num_pages }}">>|</a>
       {% endif %}
 
-{% endif %}
+    {% endif %}
 
 {% endblock content %}

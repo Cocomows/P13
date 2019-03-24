@@ -15,13 +15,28 @@ from django.db.models import Count
 
 def home(request):
     # showings_list = Showing.objects.all()
+
     movies_list = Movie.objects.filter(showing__movie__isnull=False).order_by('release_date').distinct()
 
     paginator = Paginator(movies_list, 12)
 
     page = request.GET.get('page')
     movies = paginator.get_page(page)
-    return render(request, 'movies/home.html', {'movies': movies, 'is_paginated': True})
+    return render(request, 'movies/home.html', {'movies': movies, 'is_paginated': paginator.num_pages > 1})
+
+
+def movies_in_theater(request):
+
+    code = request.GET.get('theater')
+    theater = Theater.objects.get(theater_code=code)
+
+    movies_list = Movie.objects.filter(showing__theater__theater_code=code).order_by('release_date').distinct()
+
+    paginator = Paginator(movies_list, 12)
+
+    page = request.GET.get('page')
+    movies = paginator.get_page(page)
+    return render(request, 'movies/theater.html', {'theater': theater, 'movies': movies, 'is_paginated': paginator.num_pages > 1})
 
 
 def theaters_view(request):
