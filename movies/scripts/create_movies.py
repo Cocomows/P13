@@ -81,7 +81,7 @@ def delete_all():
 
 
 def run():
-    delete_all()
+    # delete_all()
     url_seances = 'http://www.allocine.fr/film/aucinema/date-sortie/'
     get_info(url_seances)
 

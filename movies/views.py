@@ -8,7 +8,8 @@ from django.views.generic import (
     DeleteView
 )
 from django.core.paginator import Paginator
-from .models import Movie, Showing
+from .models import Movie, Showing, Theater
+from django.db.models import Count
 # Create your views here.
 
 
@@ -21,6 +22,16 @@ def home(request):
     page = request.GET.get('page')
     movies = paginator.get_page(page)
     return render(request, 'movies/home.html', {'movies': movies, 'is_paginated': True})
+
+
+def theaters_view(request):
+    # theaters_list = Theater.objects.all()
+    q = Theater.objects.annotate(number_of_showings=Count('showing')).filter(number_of_showings__gte=1).order_by('-number_of_showings')
+    paginator = Paginator(q, 25)
+
+    page = request.GET.get('page')
+    theaters = paginator.get_page(page)
+    return render(request, 'movies/theaters.html', {'theaters': theaters, 'is_paginated': True})
 
 
 def search(request):
