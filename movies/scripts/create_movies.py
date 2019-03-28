@@ -1,5 +1,6 @@
 import json
 import requests
+import time
 from bs4 import BeautifulSoup
 from movies.models import Movie
 from datetime import datetime, timedelta
@@ -30,14 +31,17 @@ def get_movies_json(request_text):
     keyword = 'jsEntities = '
     begin = request_text.find(keyword)
     json_string = request_text[begin:]
-    end = request_text[begin:].find(';')
-    json_string = json_string[len(keyword):end]
+    end = request_text[begin:].find('};')
+    json_string = json_string[len(keyword):end+1]
+    print(json_string)
     return json.loads(json_string)
 
 
 def get_info(url):
     total_pages = get_number_of_pages(url)
     for current_page in range(total_pages, 0, -1):
+        time.sleep(2)
+        print("page : "+str(current_page))
         payload = {'page': str(current_page),
                    }
         r = requests.get(url, params=payload)
@@ -68,9 +72,11 @@ def get_info(url):
             date_N_days_ago = today - timedelta(days=180)
 
             if datetime_release < date_N_days_ago:
-                # print(release_date+" - "+str(datetime_release)+" - "+title)
+                print(release_date+" - "+str(datetime_release)+" - "+title)
                 movie = Movie(allocine_code=allocine_id, title=title, poster_url=poster_link, release_date=release_date)
                 movie.save()
+            else:
+                break
 
 
 def delete_all():
@@ -81,7 +87,7 @@ def delete_all():
 
 
 def run():
-    delete_all()
+    # delete_all()
     url_seances = 'http://www.allocine.fr/film/aucinema/date-sortie/'
     get_info(url_seances)
 
