@@ -1,8 +1,7 @@
 
-{% extends "pur_beurre/layouts/base.html" %}
+{% extends "movies/layouts/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-
 
 <section id="logout">
   <div class="container">
@@ -11,7 +10,7 @@
         <h2 class="section-heading">Vous êtes déconnecté</h2>
         <hr class="my-4">
            <div><a href="{% url 'login' %}">Se reconnecter</a></div>
-          <div><a href="{% url 'pur-beurre-index' %}">Revenir à l'accueil</a></div>
+          <div><a href="{% url 'movies-home' %}">Revenir à l'accueil</a></div>
       </div>
     </div>
   </div>

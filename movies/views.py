@@ -22,7 +22,7 @@ def home(request):
 
     page = request.GET.get('page')
     movies = paginator.get_page(page)
-    return render(request, 'movies/home.html', {'movies': movies, 'is_paginated': paginator.num_pages > 1})
+    return render(request, 'movies/pages/home.html', {'movies': movies, 'is_paginated': paginator.num_pages > 1})
 
 
 def movies_in_theater(request):
@@ -36,7 +36,7 @@ def movies_in_theater(request):
 
     page = request.GET.get('page')
     movies = paginator.get_page(page)
-    return render(request, 'movies/theater.html', {'theater': theater, 'movies': movies, 'is_paginated': paginator.num_pages > 1})
+    return render(request, 'movies/pages/theater.html', {'theater': theater, 'movies': movies, 'is_paginated': paginator.num_pages > 1})
 
 
 def theaters_view(request):
@@ -46,7 +46,7 @@ def theaters_view(request):
 
     page = request.GET.get('page')
     theaters = paginator.get_page(page)
-    return render(request, 'movies/theaters.html', {'theaters': theaters, 'is_paginated': True})
+    return render(request, 'movies/pages/theaters.html', {'theaters': theaters, 'is_paginated': True})
 
 
 def search(request):
@@ -59,7 +59,7 @@ def search(request):
     else:
         movies = Movie.objects.filter(title__icontains=query)
 
-    return render(request, 'movies/results.html', {'movies': movies, 'is_paginated': True, 'query': query})
+    return render(request, 'movies/pages/results.html', {'movies': movies, 'is_paginated': True, 'query': query})
 
 #
 # class ShowingsListView(ListView):
