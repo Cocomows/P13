@@ -54,25 +54,13 @@ def search(request):
     query = request.GET.get('query')
 
     if not query:
-
         movies = Movie.objects.all()
     else:
         movies = Movie.objects.filter(title__icontains=query)
 
     return render(request, 'movies/pages/results.html', {'movies': movies, 'is_paginated': True, 'query': query})
 
-#
-# class ShowingsListView(ListView):
-#     model = Showing
-#     template_name = 'movies/home.html'  # <app>/<model>_<viewtype>.html
-#     context_object_name = 'showings'
-#     # ordering = Showing.movie.release_date
-#     paginate_by = 8
 
-#
-# class MovieListView(ListView):
-#     model = Movie
-#     template_name = 'movies/home.html'  # <app>/<model>_<viewtype>.html
-#     context_object_name = 'movies'
-#     ordering = ['release_date']
-#     paginate_by = 8
+def movie(request):
+    movie = Movie.objects.get(allocine_code=request.GET.get('movie'))
+    return render(request, 'movies/pages/movie.html', {'movie': movie})
