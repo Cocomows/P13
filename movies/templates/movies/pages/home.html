@@ -1,7 +1,5 @@
 {% extends "movies/layouts/base.html" %}
-{% load static %}
 {% block content %}
-
     <!-- Jumbotron Header -->
 
     {% if is_paginated and movies.number == 1 %}
@@ -13,61 +11,5 @@
     </header>
     {% endif %}
 
-    <!-- Page Features -->
-<div class="container">
-    <div class="row text-center">
-    {% for movie in movies %}
-      <div class="col-lg-2 col-md-6 mb-4">
-        <div class="card h-100">
-            {% if movie.poster_url %}
-            <img class="card-img-top" src="{{ movie.poster_url }}" alt="">
-            {% else %}
-            <img class="card-img-top" src="{% static 'movies/img/collection-bandes-film_1017-7088.jpg' %}" alt="">
-            {% endif %}
-
-          <div class="card-body">
-            <h4 class="card-title">{{ movie.title }}</h4>
-            <p class="card-text">
-                <small class="text-muted">Date de sortie : <br/>{{ movie.release_date|date:"d/m/Y" }}</small>
-            </p>
-          </div>
-          <div class="card-footer">
-              <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" class="btn btn-primary" target="_blank">Voir les séances sur Allociné</a>
-          </div>
-        </div>
-      </div>
-    {% if forloop.counter|divisibleby:6 %}
-    </div>
-    <div class="row text-center">
-    {% endif %}
-    {% endfor %}
-    </div>
-</div>
-
-
-
-
-
-    {% if is_paginated %}
-
-      {% if movies.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?page=1">|<</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ movies.previous_page_number }}"><</a>
-      {% endif %}
-
-      {% for num in movies.paginator.page_range %}
-        {% if movies.number == num %}
-          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-        {% elif num > movies.number|add:'-3' and num < movies.number|add:'3' %}
-          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-        {% endif %}
-      {% endfor %}
-
-      {% if movies.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ movies.next_page_number }}">></a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ movies.paginator.num_pages }}">>|</a>
-      {% endif %}
-
-{% endif %}
-
+    {% include "movies/partials/_movie-list.html" with list_type="list" %}
 {% endblock content %}
