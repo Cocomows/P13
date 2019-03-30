@@ -76,7 +76,7 @@ def get_info(url):
                 movie = Movie(allocine_code=allocine_id, title=title, poster_url=poster_link, release_date=release_date)
                 movie.save()
             else:
-                break
+                return
 
 
 def delete_all():

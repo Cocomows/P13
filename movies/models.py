@@ -18,9 +18,9 @@ class Movie(models.Model):
 
 class Theater(models.Model):
 
-    name = models.CharField(verbose_name="Name", max_length=100)
+    name = models.CharField(verbose_name="Name", max_length=200)
     theater_code = models.CharField(max_length=6, primary_key=True)
-    address = models.CharField(verbose_name="Address", max_length=200)
+    address = models.CharField(verbose_name="Address", max_length=500)
 
     def __str__(self):
         return self.name
