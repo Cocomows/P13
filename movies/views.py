@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.views.generic import (
     ListView,
@@ -8,8 +8,13 @@ from django.views.generic import (
     DeleteView
 )
 from django.core.paginator import Paginator
-from .models import Movie, Showing, Theater
+from .models import Movie, Showing, Theater, Save
 from django.db.models import Count
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db import IntegrityError
 # Create your views here.
 
 
@@ -62,9 +67,60 @@ def search(request):
 
 
 def movie(request):
-    movie = Movie.objects.get(allocine_code=request.GET.get('movie'))
-    return render(request, 'movies/pages/movie.html', {'movie': movie})
+    code = request.GET.get('movie')
+    selected_movie = Movie.objects.get(allocine_code=code)
+
+    theaters_list = Theater.objects.filter(showing__movie__allocine_code=code).distinct()
+
+    paginator = Paginator(theaters_list, 12)
+
+    page = request.GET.get('page')
+    theaters = paginator.get_page(page)
+
+    return render(request, 'movies/pages/movie.html', {'movie': selected_movie, 'theaters': theaters})
 
 
 def about(request):
     return render(request, 'movies/pages/about.html')
+
+
+@login_required
+def save_movie(request):
+
+    code = request.GET.get('code')
+    movie_to_save = Movie.objects.get(allocine_code=code)
+
+    try:
+        save = Save(saved_by=request.user, saved_movie=movie_to_save)
+        save.save()
+        messages.success(request, 'Le film {} a bien été enregistré dans votre liste de films sauvegardés'.format(movie_to_save.title))
+    except IntegrityError as error:
+        print(error)
+        messages.warning(request, "Vous avez déjà enregistré ce film précédemment, "
+                         "il n'a pas été rajouté à votre liste de films sauvegardés.")
+
+    return redirect('saved-movies')
+
+
+# class SaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+#     model = Save
+#     template_name = 'pur_beurre/pages/save_confirm_delete.html'
+#     success_url = '/saved'
+#
+#     def test_func(self):
+#         save = self.get_object()
+#         if self.request.user == save.saved_by:
+#             return True
+#         return False
+
+
+class UserSavedMoviesList(ListView):
+    model = Save
+    template_name = 'movies/pages/saved_movies.html'
+    context_object_name = 'saves'
+    paginate_by = 12
+    ordering = ['-date']
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.request.user)
+        return Save.objects.filter(saved_by=user).order_by('-date')

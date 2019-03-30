@@ -4,7 +4,7 @@
 
 <div class="container">
     <div class="row text-center">
-      <div class="col-lg-2 col-md-6 mb-4">
+      <div class="col-lg-2 col-sm-4 offset-md-5 mb-4">
         <div class="card h-100">
             {% if movie.poster_url %}
             <img class="card-img-top" src="{{ movie.poster_url }}" alt="">
@@ -19,18 +19,32 @@
             </div>
         </div>
       </div>
-    <div class="col-lg-6">
+
+  </div>
+    <div class="row text-center">
+        <div class="col-lg-12">
+
         <p>
-        <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" class="btn btn-primary" target="_blank">
-            Enregistrer dans mes favoris
+        <a href="{% url 'save' %}?code={{ movie.allocine_code }}" class="btn btn-primary">
+            Enregistrer ce film dans mes favoris
         </a></p>
+        {% if theaters|length > 0 %}
+            <p>Diffusé dans les cinémas suivants :</p>
+
+            {% for theater in theaters %}
+            <a href="{% url 'theater' %}?theater={{theater.theater_code}}">{{ theater }}</a>
+            {{ theater.number_of_showings}} (<a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">Voir sur Allociné</a>)
+            <div class="text-muted">{{ theater.address}}</div>
+            {% endfor %}
+        {% endif %}
+
         <p>
         <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" class="btn btn-primary" target="_blank">
-            Voir les séances sur Allociné
+            Voir toutes les séances sur Allociné
         </a>
         </p>
     </div>
-  </div>
+    </div>
 </div>
 
 {% endblock content %}

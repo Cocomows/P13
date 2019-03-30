@@ -8,6 +8,9 @@ body {
   padding-bottom: 30px;
 }
 
+.card img {
+}
+
 .card_movie a, a:active, a:focus, a:hover {
   text-decoration: none;
   outline: none;

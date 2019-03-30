@@ -1,5 +1,5 @@
 from django.contrib import admin
-from movies.models import Movie, Theater, Showing
+from movies.models import Movie, Theater, Showing, Save
 # Register your models here.
 
 
@@ -21,3 +21,8 @@ class MovieAdmin(admin.ModelAdmin):
 @admin.register(Showing)
 class MovieAdmin(admin.ModelAdmin):
     list_display = ('movie', 'theater')
+
+
+@admin.register(Save)
+class MovieAdmin(admin.ModelAdmin):
+    list_filter = ('date', 'saved_by')

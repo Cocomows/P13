@@ -21,9 +21,8 @@
           <td><a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">{{ theater }}</a></td>
           <td class="text-center">{{ theater.number_of_showings}} (<a href="{% url 'theater' %}?theater={{theater.theater_code}}">Voir la liste</a>)</td>
           <td class="text-muted">{{ theater.address}}</td>
-
-    {% endfor %}
         </tr>
+    {% endfor %}
 
       </tbody>
     </table>

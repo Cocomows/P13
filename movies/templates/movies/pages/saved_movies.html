@@ -1,0 +1,71 @@
+{% extends "movies/layouts/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12 text-center">
+      <h2 class="section-heading">Films sauvés par {{ user|title }}</h2>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+    <div class="row text-center">
+    {% for save in saves %}
+      <div class="col-lg-2 col-sm-4 mb-4">
+        <div class="card h-100 card_movie">
+          <a href="{% url 'movie' %}?movie={{save.saved_movie.allocine_code}}">
+                {% if save.saved_movie.poster_url %}
+                <img class="card-img-top" src="{{ save.saved_movie.poster_url }}" alt="">
+                {% else %}
+                <img class="card-img-top" src="{% static 'movies/img/collection-bandes-film_1017-7088.jpg' %}" alt="">
+                {% endif %}
+
+              <div class="card-body">
+                <p class="card-title">{{ save.saved_movie.title }}</p>
+                <p class="card-text">
+                  <small class="text-muted">{{ save.saved_movie.release_date|date:"d/m/Y" }}</small>
+                </p>
+              </div>
+            </a>
+        </div>
+      </div>
+    {% if forloop.counter|divisibleby:6 %}
+    </div>
+    <div class="row text-center">
+    {% endif %}
+    {% empty %}
+    <div class="col-lg-12 text-center">
+        Pas de film sauvegardé.
+    </div>
+    {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+
+{% if is_paginated %}
+    {% if page_obj.has_previous %}
+        <a class="btn btn-outline-secondary mb-4" href="?page=1">|<</a>
+        <a class="btn btn-outline-secondary mb-4" href="?page={{ page_obj.previous_page_number }}"><</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a class="btn btn-secondary mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline-secondary mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline-secondary mb-4" href="?page={{ page_obj.next_page_number }}">></a>
+        <a class="btn btn-outline-secondary mb-4" href="?page={{ page_obj.paginator.num_pages }}">>|</a>
+    {% endif %}
+{% endif %}
+
+
+{% endblock content %}

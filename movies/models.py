@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -34,4 +36,17 @@ class Showing(models.Model):
 
     def __str__(self):
         return str(self.theater).capitalize()+" diffuse le film "+str(self.movie)
+
+
+class Save(models.Model):
+
+    class Meta:
+        unique_together = (('saved_by', 'saved_movie'),)
+
+    date = models.DateTimeField(verbose_name="Date sauvegarde", default=timezone.now)
+    saved_by = models.ForeignKey(User, verbose_name="Sauvegardé par", on_delete=models.CASCADE,)
+    saved_movie = models.ForeignKey(Movie, verbose_name="Film sauvegardé", on_delete=models.CASCADE,)
+
+    def __str__(self):
+        return str(self.saved_by).capitalize()+" a sauvegardé le film "+str(self.saved_movie)+" le "+str(self.date)
 
