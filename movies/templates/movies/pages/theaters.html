@@ -8,8 +8,8 @@
     <table class="table">
       <thead>
         <tr>
-            <th scope="col">Cinéma <div class="text-muted">cliquer pour voir le cinéma sur allociné</m></div></th>
-            <th scope="col">Nombre d'anciens films diffusés</th>
+            <th scope="col">Cinéma (voir sur allociné)</th>
+            <th scope="col">Anciens films diffusés</th>
             <th scope="col" class="text-muted">Adresse</th>
 
         </tr>
@@ -18,12 +18,16 @@
 
     {% for theater in theaters %}
         <tr>
-          <td><a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">{{ theater }}</a></td>
-          <td class="text-center">{{ theater.number_of_showings}} (<a href="{% url 'theater' %}?theater={{theater.theater_code}}">Voir la liste</a>)</td>
+          <td><a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">
+              <img src="http://www.allocine.fr/favicon.ico" class="ac-icon" alt="">
+              {{ theater }}</a></td>
+            <td class="text-center">
+                <a href="{% url 'theater' %}?theater={{theater.theater_code}}" class="btn btn-secondary">
+                    {{ theater.number_of_showings}}</a>
+            </td>
           <td class="text-muted">{{ theater.address}}</td>
-
-    {% endfor %}
         </tr>
+    {% endfor %}
 
       </tbody>
     </table>
@@ -34,29 +38,27 @@
 </div>
 
 
+{% if is_paginated %}
 
+  {% if theaters.has_previous %}
+    <a class="btn btn-outline-info mb-4" href="?page=1">|<</a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ theaters.previous_page_number }}"><</a>
+  {% endif %}
 
-    {% if is_paginated %}
-
-      {% if theaters.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?page=1">|<</a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ theaters.previous_page_number }}"><</a>
-      {% endif %}
-
-      {% for num in theaters.paginator.page_range %}
-        {% if theaters.number == num %}
-          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-        {% elif num > theaters.number|add:'-3' and num < theaters.number|add:'3' %}
-          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-        {% endif %}
-      {% endfor %}
-
-      {% if theaters.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?page={{ theaters.next_page_number }}">></a>
-        <a class="btn btn-outline-info mb-4" href="?page={{ theaters.paginator.num_pages }}">>|</a>
-      {% endif %}
-
+  {% for num in theaters.paginator.page_range %}
+    {% if theaters.number == num %}
+      <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+    {% elif num > theaters.number|add:'-3' and num < theaters.number|add:'3' %}
+      <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
     {% endif %}
+  {% endfor %}
+
+  {% if theaters.has_next %}
+    <a class="btn btn-outline-info mb-4" href="?page={{ theaters.next_page_number }}">></a>
+    <a class="btn btn-outline-info mb-4" href="?page={{ theaters.paginator.num_pages }}">>|</a>
+  {% endif %}
+
+{% endif %}
 
 
 {% endblock content %}

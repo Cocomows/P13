@@ -1,20 +1,20 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import (
     ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
     DeleteView
 )
 from django.core.paginator import Paginator
-from .models import Movie, Showing, Theater
+from .models import Movie, Theater, Save
 from django.db.models import Count
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db import IntegrityError
 # Create your views here.
 
 
 def home(request):
-    # showings_list = Showing.objects.all()
 
     movies_list = Movie.objects.filter(showing__movie__isnull=False).order_by('release_date').distinct()
 
@@ -40,7 +40,7 @@ def movies_in_theater(request):
 
 
 def theaters_view(request):
-    # theaters_list = Theater.objects.all()
+
     q = Theater.objects.annotate(number_of_showings=Count('showing')).filter(number_of_showings__gte=1).order_by('-number_of_showings')
     paginator = Paginator(q, 25)
 
@@ -54,25 +54,72 @@ def search(request):
     query = request.GET.get('query')
 
     if not query:
-
         movies = Movie.objects.all()
     else:
         movies = Movie.objects.filter(title__icontains=query)
 
     return render(request, 'movies/pages/results.html', {'movies': movies, 'is_paginated': True, 'query': query})
 
-#
-# class ShowingsListView(ListView):
-#     model = Showing
-#     template_name = 'movies/home.html'  # <app>/<model>_<viewtype>.html
-#     context_object_name = 'showings'
-#     # ordering = Showing.movie.release_date
-#     paginate_by = 8
 
-#
-# class MovieListView(ListView):
-#     model = Movie
-#     template_name = 'movies/home.html'  # <app>/<model>_<viewtype>.html
-#     context_object_name = 'movies'
-#     ordering = ['release_date']
-#     paginate_by = 8
+def movie(request):
+
+    code = request.GET.get('movie')
+    selected_movie = Movie.objects.get(allocine_code=code)
+
+    theaters_list = Theater.objects.filter(showing__movie__allocine_code=code).distinct()
+
+    paginator = Paginator(theaters_list, 12)
+
+    page = request.GET.get('page')
+    theaters = paginator.get_page(page)
+
+    return render(request, 'movies/pages/movie.html', {'movie': selected_movie, 'theaters': theaters})
+
+
+def about(request):
+
+    return render(request, 'movies/pages/about.html')
+
+
+@login_required
+def save_movie(request):
+
+    code = request.GET.get('code')
+    movie_to_save = Movie.objects.get(allocine_code=code)
+
+    try:
+        save = Save(saved_by=request.user, saved_movie=movie_to_save)
+        save.save()
+        messages.success(request, 'Le film {} a bien été enregistré dans votre liste de films sauvegardés'.format(movie_to_save.title))
+    except IntegrityError as error:
+        print(error)
+        messages.warning(request, "Vous avez déjà enregistré ce film précédemment, "
+                         "il n'a pas été rajouté à votre liste de films sauvegardés.")
+
+    return redirect('saved-movies')
+
+
+class SaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+
+    model = Save
+    template_name = 'movies/pages/save_confirm_delete.html'
+    success_url = '/saved-movies'
+
+    def test_func(self):
+        save = self.get_object()
+        if self.request.user == save.saved_by:
+            return True
+        return False
+
+
+class UserSavedMoviesList(ListView):
+
+    model = Save
+    template_name = 'movies/pages/saved_movies.html'
+    context_object_name = 'saves'
+    paginate_by = 12
+    ordering = ['-date']
+
+    def get_queryset(self):
+        user = get_object_or_404(User, username=self.request.user)
+        return Save.objects.filter(saved_by=user).order_by('-date')

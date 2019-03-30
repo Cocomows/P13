@@ -1,0 +1,53 @@
+{% extends "movies/layouts/base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container">
+    <div class="row text-center">
+      <div class="col-lg-2 col-sm-4 offset-md-5 mb-4">
+        <div class="card h-100">
+            {% if movie.poster_url %}
+            <img class="card-img-top" src="{{ movie.poster_url }}" alt="">
+            {% else %}
+            <img class="card-img-top" src="{% static 'movies/img/collection-bandes-film_1017-7088.jpg' %}" alt="">
+            {% endif %}
+            <div class="card-body">
+            <p class="card-title">{{ movie.title }}</p>
+            <p class="card-text">
+                <small class="text-muted">{{ movie.release_date|date:"d/m/Y" }}</small>
+            </p>
+            </div>
+        </div>
+      </div>
+
+  </div>
+    <div class="row text-center">
+        <div class="col-lg-12">
+
+        <p>
+        <a href="{% url 'save' %}?code={{ movie.allocine_code }}" class="btn btn-primary">
+            Enregistrer ce film dans mes favoris
+        </a></p>
+        {% if theaters|length > 0 %}
+            <p>Diffusé dans les cinémas suivants :</p>
+
+            {% for theater in theaters %}
+            <a href="{% url 'theater' %}?theater={{theater.theater_code}}" class="btn btn-secondary">{{ theater }}</a>
+            {{ theater.number_of_showings}}
+            (<a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">
+            <img src="http://www.allocine.fr/favicon.ico" class="ac-icon" alt=""> Voir la salle sur Allociné</a>)
+            <div class="text-muted">{{ theater.address}}</div>
+            {% endfor %}
+        {% endif %}
+
+        <p class="my-3">
+        <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" target="_blank">
+            <img src="http://www.allocine.fr/favicon.ico" class="ac-icon" alt=""> Voir toutes les séances de
+            {{ movie.title }} sur Allociné
+        </a>
+        </p>
+    </div>
+    </div>
+</div>
+
+{% endblock content %}

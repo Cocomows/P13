@@ -1,0 +1,27 @@
+{% extends 'movies/layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<section id="delete">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="content-section">
+                    <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <legend class="border-bottom mb-4">Suppression de film sauvegardé</legend>
+                        <p>Etes vous sûr de vouloir supprimer le film "{{ object.saved_movie.title }}"
+                            de vos films sauvegardés ?</p>
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-danger" type="submit">Oui, supprimer</button>
+                        <a class="btn btn-outline-secondary" href="{% url 'saved-movies' %}">Annuler</a>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -2,67 +2,15 @@
 {% load static %}
 {% block content %}
 
-<h2>Anciens films diffusés au cinéma <a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">{{ theater }}</a></h2>
+<h2>Anciens films diffusés au cinéma
+    <a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">
+    <img src="http://www.allocine.fr/favicon.ico" class="ac-icon" alt=""> {{ theater }}</a></h2>
 <div class="container">
-    <div class="row text-center"><h3><a href="{% url 'theaters' %}">Revenir à la liste des cinémas</a></h3>
-    </div>
-</div>
-
-    <!-- Page Features -->
-<div class="container">
-    <div class="row text-center">
-    {% for movie in movies %}
-      <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card h-100">
-            {% if movie.poster_url %}
-            <img class="card-img-top" src="{{ movie.poster_url }}" alt="">
-            {% else %}
-            <img class="card-img-top" src="{% static 'movies/img/collection-bandes-film_1017-7088.jpg' %}" alt="">
-            {% endif %}
-
-          <div class="card-body">
-            <h4 class="card-title">{{ movie.title }}</h4>
-            <p class="card-text">
-                <small class="text-muted">Date de sortie : <br/>{{ movie.release_date|date:"d/m/Y" }}</small>
-            </p>
-          </div>
-          <div class="card-footer">
-              <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" class="btn btn-primary" target="_blank">Voir les séances sur Allociné</a>
-          </div>
-        </div>
-      </div>
-    {% if forloop.counter|divisibleby:4 %}
-    </div>
-    <div class="row text-center">
-    {% endif %}
-    {% endfor %}
+    <div class="row text-center"><h3><a href="{% url 'theaters' %}" class="btn btn-secondary">Liste des cinémas</a></h3>
     </div>
 </div>
 
 
-
-
-
-    {% if is_paginated %}
-
-      {% if movies.has_previous %}
-        <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page=1">|<</a>
-        <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page={{ movies.previous_page_number }}"><</a>
-      {% endif %}
-
-      {% for num in movies.paginator.page_range %}
-        {% if movies.number == num %}
-          <a class="btn btn-info mb-4" href="?theater={{ theater.theater_code}}&page={{ num }}">{{ num }}</a>
-        {% elif num > movies.number|add:'-3' and num < movies.number|add:'3' %}
-          <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page={{ num }}">{{ num }}</a>
-        {% endif %}
-      {% endfor %}
-
-      {% if movies.has_next %}
-        <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page={{ movies.next_page_number }}">></a>
-        <a class="btn btn-outline-info mb-4" href="?theater={{ theater.theater_code}}&page={{ movies.paginator.num_pages }}">>|</a>
-      {% endif %}
-
-    {% endif %}
+{% include "movies/partials/_movie-list.html" with list_type="theater" %}
 
 {% endblock content %}

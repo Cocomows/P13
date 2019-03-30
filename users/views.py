@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import UserRegisterForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 
 def register(request):
@@ -15,6 +16,12 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
+
+
+def logout_view(request):
+    logout(request)
+    messages.warning(request, "Vous avez été déconnecté")
+    return redirect('login')
 
 
 @login_required

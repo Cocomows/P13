@@ -1,0 +1,39 @@
+{% load static %}
+
+<div class="container">
+    <div class="row text-center">
+    {% for movie in movies %}
+      <div class="col-lg-2 col-sm-4 mb-4">
+        <div class="card h-100 card_movie">
+          <a href="{% url 'movie' %}?movie={{movie.allocine_code}}">
+                {% if movie.poster_url %}
+                <img class="card-img-top" src="{{ movie.poster_url }}" alt="">
+                {% else %}
+                <img class="card-img-top" src="{% static 'movies/img/collection-bandes-film_1017-7088.jpg' %}" alt="">
+                {% endif %}
+
+              <div class="card-body">
+                <p class="card-title">{{ movie.title }}</p>
+                <p class="card-text">
+                  <small class="text-muted">{{ movie.release_date|date:"d/m/Y" }}</small>
+                </p>
+              </div>
+            </a>
+        </div>
+      </div>
+    {% if forloop.counter|divisibleby:6 %}
+    </div>
+    <div class="row text-center">
+    {% endif %}
+    {% endfor %}
+    </div>
+</div>
+
+{% if list_type == 'theater' %}
+{% include "movies/partials/_theater-pagination.html" %}
+{% else %}
+{% include "movies/partials/_pagination.html" %}
+{% endif %}
+
+
+

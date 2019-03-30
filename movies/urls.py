@@ -1,16 +1,15 @@
 from django.urls import path
+from django.contrib.auth.decorators import login_required
 from . import views
-from .views import (
-    home,
-    search,
-    theaters_view,
-    movies_in_theater,
-    # ShowingsListView,
-)
 
 urlpatterns = [
-    path('', home, name='movies-home'),
-    path('search', search, name='search'),
-    path('theaters', theaters_view, name='theaters'),
-    path('theater', movies_in_theater, name='theater')
+    path('', views.home, name='movies-home'),
+    path('search', views.search, name='search'),
+    path('theaters', views.theaters_view, name='theaters'),
+    path('theater', views.movies_in_theater, name='theater'),
+    path('movie', views.movie, name='movie'),
+    path('about', views.about, name='about'),
+    path('save', views.save_movie, name='save'),
+    path('saved-movies', login_required(views.UserSavedMoviesList.as_view()), name='saved-movies'),
+    path('save/<int:pk>/delete/', views.SaveDeleteView.as_view(), name='save-delete'),
 ]
