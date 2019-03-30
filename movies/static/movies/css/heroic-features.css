@@ -8,6 +8,15 @@ body {
   padding-bottom: 30px;
 }
 
+.ac-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.delete {
+  color: red;
+}
+
 .card img {
 }
 

@@ -25,6 +25,7 @@
                 <p class="card-title">{{ save.saved_movie.title }}</p>
                 <p class="card-text">
                   <small class="text-muted">{{ save.saved_movie.release_date|date:"d/m/Y" }}</small>
+                    <small><a href="{% url 'save-delete' save.id %}" class="delete">Supprimer des films enregistrés</a></small>
                 </p>
               </div>
             </a>

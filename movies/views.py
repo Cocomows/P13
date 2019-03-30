@@ -102,16 +102,16 @@ def save_movie(request):
     return redirect('saved-movies')
 
 
-# class SaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-#     model = Save
-#     template_name = 'pur_beurre/pages/save_confirm_delete.html'
-#     success_url = '/saved'
-#
-#     def test_func(self):
-#         save = self.get_object()
-#         if self.request.user == save.saved_by:
-#             return True
-#         return False
+class SaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Save
+    template_name = 'movies/pages/save_confirm_delete.html'
+    success_url = '/saved-movies'
+
+    def test_func(self):
+        save = self.get_object()
+        if self.request.user == save.saved_by:
+            return True
+        return False
 
 
 class UserSavedMoviesList(ListView):

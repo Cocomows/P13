@@ -32,15 +32,18 @@
             <p>Diffusé dans les cinémas suivants :</p>
 
             {% for theater in theaters %}
-            <a href="{% url 'theater' %}?theater={{theater.theater_code}}">{{ theater }}</a>
-            {{ theater.number_of_showings}} (<a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">Voir sur Allociné</a>)
+            <a href="{% url 'theater' %}?theater={{theater.theater_code}}" class="btn btn-secondary">{{ theater }}</a>
+            {{ theater.number_of_showings}}
+            (<a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">
+            <img src="http://www.allocine.fr/favicon.ico" class="ac-icon" alt=""> Voir la salle sur Allociné</a>)
             <div class="text-muted">{{ theater.address}}</div>
             {% endfor %}
         {% endif %}
 
         <p>
-        <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" class="btn btn-primary" target="_blank">
-            Voir toutes les séances sur Allociné
+        <a href="http://www.allocine.fr/seance/film-{{ movie.allocine_code}}/toutes/" target="_blank">
+            <img src="http://www.allocine.fr/favicon.ico" class="ac-icon" alt=""> Voir toutes les séances de
+            {{ movie.title }} sur Allociné
         </a>
         </p>
     </div>
