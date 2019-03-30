@@ -21,7 +21,6 @@ def register(request):
 def logout_view(request):
     logout(request)
     messages.warning(request, "Vous avez été déconnecté")
-
     return redirect('login')
 
 

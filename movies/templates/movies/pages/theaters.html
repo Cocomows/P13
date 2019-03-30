@@ -21,7 +21,10 @@
           <td><a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">
               <img src="http://www.allocine.fr/favicon.ico" class="ac-icon" alt="">
               {{ theater }}</a></td>
-            <td class="text-center"> <a href="{% url 'theater' %}?theater={{theater.theater_code}}" class="btn btn-secondary">{{ theater.number_of_showings}}</a></td>
+            <td class="text-center">
+                <a href="{% url 'theater' %}?theater={{theater.theater_code}}" class="btn btn-secondary">
+                    {{ theater.number_of_showings}}</a>
+            </td>
           <td class="text-muted">{{ theater.address}}</td>
         </tr>
     {% endfor %}

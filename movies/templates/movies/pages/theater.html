@@ -2,8 +2,9 @@
 {% load static %}
 {% block content %}
 
-<h2>Anciens films diffusés au cinéma <a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">
-              <img src="http://www.allocine.fr/favicon.ico" class="ac-icon" alt=""> {{ theater }}</a></h2>
+<h2>Anciens films diffusés au cinéma
+    <a href="http://www.allocine.fr/seance/salle_gen_csalle={{theater.theater_code}}.html" target="_blank">
+    <img src="http://www.allocine.fr/favicon.ico" class="ac-icon" alt=""> {{ theater }}</a></h2>
 <div class="container">
     <div class="row text-center"><h3><a href="{% url 'theaters' %}" class="btn btn-secondary">Liste des cinémas</a></h3>
     </div>

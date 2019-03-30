@@ -1,14 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
 from django.views.generic import (
     ListView,
-    DetailView,
-    CreateView,
-    UpdateView,
     DeleteView
 )
 from django.core.paginator import Paginator
-from .models import Movie, Showing, Theater, Save
+from .models import Movie, Theater, Save
 from django.db.models import Count
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -19,7 +15,6 @@ from django.db import IntegrityError
 
 
 def home(request):
-    # showings_list = Showing.objects.all()
 
     movies_list = Movie.objects.filter(showing__movie__isnull=False).order_by('release_date').distinct()
 
@@ -45,7 +40,7 @@ def movies_in_theater(request):
 
 
 def theaters_view(request):
-    # theaters_list = Theater.objects.all()
+
     q = Theater.objects.annotate(number_of_showings=Count('showing')).filter(number_of_showings__gte=1).order_by('-number_of_showings')
     paginator = Paginator(q, 25)
 
@@ -67,6 +62,7 @@ def search(request):
 
 
 def movie(request):
+
     code = request.GET.get('movie')
     selected_movie = Movie.objects.get(allocine_code=code)
 
@@ -81,6 +77,7 @@ def movie(request):
 
 
 def about(request):
+
     return render(request, 'movies/pages/about.html')
 
 
@@ -103,6 +100,7 @@ def save_movie(request):
 
 
 class SaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+
     model = Save
     template_name = 'movies/pages/save_confirm_delete.html'
     success_url = '/saved-movies'
@@ -115,6 +113,7 @@ class SaveDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 class UserSavedMoviesList(ListView):
+
     model = Save
     template_name = 'movies/pages/saved_movies.html'
     context_object_name = 'saves'

@@ -11,7 +11,8 @@
                     {% csrf_token %}
                     <fieldset class="form-group">
                         <legend class="border-bottom mb-4">Suppression de film sauvegardé</legend>
-                        <p>Etes vous sûr de vouloir supprimer le film "{{ object.saved_movie.title }}" de vos films sauvegardés ?</p>
+                        <p>Etes vous sûr de vouloir supprimer le film "{{ object.saved_movie.title }}"
+                            de vos films sauvegardés ?</p>
                     </fieldset>
                     <div class="form-group">
                         <button class="btn btn-outline-danger" type="submit">Oui, supprimer</button>
