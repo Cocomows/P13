@@ -6,6 +6,7 @@ from .views import (
     theaters_view,
     movies_in_theater,
     movie,
+    about,
     # ShowingsListView,
 )
 
@@ -14,5 +15,6 @@ urlpatterns = [
     path('search', search, name='search'),
     path('theaters', theaters_view, name='theaters'),
     path('theater', movies_in_theater, name='theater'),
-    path('movie', movie, name='movie')
+    path('movie', movie, name='movie'),
+    path('about', about, name='about'),
 ]

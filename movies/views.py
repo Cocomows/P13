@@ -64,3 +64,7 @@ def search(request):
 def movie(request):
     movie = Movie.objects.get(allocine_code=request.GET.get('movie'))
     return render(request, 'movies/pages/movie.html', {'movie': movie})
+
+
+def about(request):
+    return render(request, 'movies/pages/about.html')

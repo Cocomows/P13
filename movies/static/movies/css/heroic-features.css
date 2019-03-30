@@ -4,10 +4,33 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-heroic-features/blob/master/LICENSE)
  */
 body {
-  padding-top: 60px;
+  padding-top: 70px;
   padding-bottom: 30px;
 }
 
-.card a {
+.card_movie a, a:active, a:focus, a:hover {
+  text-decoration: none;
+  outline: none;
+}
 
+.card_movie {
+  transition: transform .5s;
+}
+.card_movie::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.15);
+  content: '';
+  opacity: 0;
+  z-index: -1;
+}
+.card_movie:hover, .card_movie:focus {
+  transform: scale3d(1.02, 1.02, 1);
+}
+.card_movie:hover::after, .card_movie:focus::after {
+  opacity: 1;
 }
