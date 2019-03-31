@@ -20,26 +20,27 @@ class MovieModelTests(TestCase):
                       release_date='2014-02-19T00:00:00+01:00')
 
         self.assertIs(movie.__str__(), "La Grande Aventure Lego")
-#
-#
-# class ViewsTests(TestCase):
-#
-#     def test_homepage(self):
-#         """
-#         Test access to homepage
-#         """
-#         response = self.client.get(reverse('pur-beurre-index'))
-#         self.assertEqual(response.status_code, 200)
-#         self.assertContains(response, "Du gras")
-#
-#     def test_search(self):
-#         """
-#         Test access to search page without search terms
-#         """
-#         response = self.client.get(reverse('pur-beurre-results'))
-#         self.assertEqual(response.status_code, 200)
-#         self.assertContains(response, "Entrez un produit à rechercher dans la barre de recherche")
-#
+
+
+class ViewsTests(TestCase):
+
+    def test_homepage(self):
+        """
+        Test access to homepage
+        """
+        response = self.client.get(reverse('movies-home'))
+        print(response)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Après dernière")
+
+    def test_search(self):
+        """
+        Test access to search page without search terms
+        """
+        response = self.client.get(reverse('search'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Malheureusement")
+
 #     def test_search_arg(self):
 #         """
 #         Test access to search page with search terms

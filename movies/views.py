@@ -38,13 +38,14 @@ def movies_in_theater(request):
 
     page = request.GET.get('page')
     movies = paginator.get_page(page)
-    return render(request, 'movies/pages/theater.html', {'theater': theater, 'movies': movies, 'is_paginated': paginator.num_pages > 1})
+    return render(request, 'movies/pages/theater.html', {'theater': theater, 'movies': movies,
+                                                         'is_paginated': paginator.num_pages > 1})
 
 
 def theaters_view(request):
 
-    q = Theater.objects.annotate(number_of_showings=Count('showing')).filter(number_of_showings__gte=1).order_by('-number_of_showings')
-    paginator = Paginator(q, 25)
+    theaters_list = Theater.objects.annotate(number_of_showings=Count('showing')).filter(number_of_showings__gte=1).order_by('-number_of_showings')
+    paginator = Paginator(theaters_list, 25)
 
     page = request.GET.get('page')
     theaters = paginator.get_page(page)
@@ -56,13 +57,19 @@ def search(request):
     query = request.GET.get('query')
 
     if not query:
-        movies = Movie.objects.all()
+        movies_list = Movie.objects.none()
     else:
         search_trigram = Movie.objects.annotate(similarity=TrigramSimilarity('title', query),)\
                  .filter(similarity__gt=0.3).order_by('-similarity')
         search_contain = Movie.objects.filter(title__icontains=query)
-        movies = search_trigram | search_contain
-    return render(request, 'movies/pages/results.html', {'movies': movies, 'is_paginated': True, 'query': query})
+        movies_list = search_trigram | search_contain
+        movies_list = movies_list.order_by('release_date')
+    paginator = Paginator(movies_list, 12)
+
+    page = request.GET.get('page')
+    movies = paginator.get_page(page)
+    return render(request, 'movies/pages/results.html', {'movies': movies, 'is_paginated':  paginator.num_pages > 1,
+                                                         'query': query})
 
 
 def movie(request):
