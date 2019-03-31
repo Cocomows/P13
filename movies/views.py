@@ -44,7 +44,8 @@ def movies_in_theater(request):
 
 def theaters_view(request):
 
-    theaters_list = Theater.objects.annotate(number_of_showings=Count('showing')).filter(number_of_showings__gte=1).order_by('-number_of_showings')
+    theaters_list = Theater.objects.annotate(number_of_showings=Count('showing'))\
+                    .filter(number_of_showings__gte=1).order_by('-number_of_showings')
     paginator = Paginator(theaters_list, 25)
 
     page = request.GET.get('page')
@@ -57,14 +58,13 @@ def search(request):
     query = request.GET.get('query')
 
     if not query:
-        movies_list = Movie.objects.none()
+        movies_list_search = Movie.objects.none()
     else:
         search_trigram = Movie.objects.annotate(similarity=TrigramSimilarity('title', query),)\
                  .filter(similarity__gt=0.3).order_by('-similarity')
         search_contain = Movie.objects.filter(title__icontains=query)
-        movies_list = search_trigram | search_contain
-        movies_list = movies_list.order_by('release_date')
-    paginator = Paginator(movies_list, 12)
+        movies_list_search = search_trigram | search_contain
+    paginator = Paginator(movies_list_search.order_by('release_date').distinct(), 12)
 
     page = request.GET.get('page')
     movies = paginator.get_page(page)
@@ -101,7 +101,8 @@ def save_movie(request):
     try:
         save = Save(saved_by=request.user, saved_movie=movie_to_save)
         save.save()
-        messages.success(request, 'Le film {} a bien été enregistré dans votre liste de films sauvegardés'.format(movie_to_save.title))
+        messages.success(request, 'Le film {} a bien été enregistré dans votre liste de films sauvegardés'
+                         .format(movie_to_save.title))
     except IntegrityError as error:
         print(error)
         messages.warning(request, "Vous avez déjà enregistré ce film précédemment, "

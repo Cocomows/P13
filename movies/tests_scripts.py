@@ -1,5 +1,4 @@
 import os
-import json
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "apresderniere.settings")
 import django
 django.setup()
@@ -54,5 +53,3 @@ class TestScriptMovies(TestCase):
     def test_results_get_movies_json(self):
         returned_json = get_movies_json(self.jsEntities_mockup)
         self.assertTrue('Movie_260416' in returned_json)
-
-
