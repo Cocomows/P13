@@ -33,7 +33,6 @@ def get_movies_json(request_text):
     json_string = request_text[begin:]
     end = request_text[begin:].find('};')
     json_string = json_string[len(keyword):end+1]
-    print(json_string)
     return json.loads(json_string)
 
 

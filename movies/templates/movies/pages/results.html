@@ -6,7 +6,8 @@
 {% if not movies %}
     Malheureusement, nous n'avons pas de résultat de film correspondant à la recherche {{ query}}.
 {% else %}
-    {% include "movies/partials/_movie-list.html" with list_type="list" %}
+    {% include "movies/partials/_movie-list.html" with list_type="search" %}
 {% endif %}
+
 </div>
 {% endblock content %}

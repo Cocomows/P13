@@ -26,9 +26,7 @@ def get_showings(theater_code):
 
 
 def delete_all():
-    # Fetch all movies
     showings = Showing.objects.all()
-    # Delete movies
     showings.delete()
 
 

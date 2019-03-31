@@ -31,6 +31,8 @@
 
 {% if list_type == 'theater' %}
 {% include "movies/partials/_theater-pagination.html" %}
+{% elif list_type == 'search'%}
+{% include "movies/partials/_search-pagination.html" %}
 {% else %}
 {% include "movies/partials/_pagination.html" %}
 {% endif %}

@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import IntegrityError
+from django.contrib.postgres.search import TrigramSimilarity
+import django.contrib.postgres.search
 # Create your views here.
 
 
@@ -36,13 +38,15 @@ def movies_in_theater(request):
 
     page = request.GET.get('page')
     movies = paginator.get_page(page)
-    return render(request, 'movies/pages/theater.html', {'theater': theater, 'movies': movies, 'is_paginated': paginator.num_pages > 1})
+    return render(request, 'movies/pages/theater.html', {'theater': theater, 'movies': movies,
+                                                         'is_paginated': paginator.num_pages > 1})
 
 
 def theaters_view(request):
 
-    q = Theater.objects.annotate(number_of_showings=Count('showing')).filter(number_of_showings__gte=1).order_by('-number_of_showings')
-    paginator = Paginator(q, 25)
+    theaters_list = Theater.objects.annotate(number_of_showings=Count('showing'))\
+                    .filter(number_of_showings__gte=1).order_by('-number_of_showings')
+    paginator = Paginator(theaters_list, 25)
 
     page = request.GET.get('page')
     theaters = paginator.get_page(page)
@@ -54,11 +58,18 @@ def search(request):
     query = request.GET.get('query')
 
     if not query:
-        movies = Movie.objects.all()
+        movies_list_search = Movie.objects.none()
     else:
-        movies = Movie.objects.filter(title__icontains=query)
+        search_trigram = Movie.objects.annotate(similarity=TrigramSimilarity('title', query),)\
+                 .filter(similarity__gt=0.3).order_by('-similarity')
+        search_contain = Movie.objects.filter(title__icontains=query)
+        movies_list_search = search_trigram | search_contain
+    paginator = Paginator(movies_list_search.order_by('release_date').distinct(), 12)
 
-    return render(request, 'movies/pages/results.html', {'movies': movies, 'is_paginated': True, 'query': query})
+    page = request.GET.get('page')
+    movies = paginator.get_page(page)
+    return render(request, 'movies/pages/results.html', {'movies': movies, 'is_paginated':  paginator.num_pages > 1,
+                                                         'query': query})
 
 
 def movie(request):
@@ -90,7 +101,8 @@ def save_movie(request):
     try:
         save = Save(saved_by=request.user, saved_movie=movie_to_save)
         save.save()
-        messages.success(request, 'Le film {} a bien été enregistré dans votre liste de films sauvegardés'.format(movie_to_save.title))
+        messages.success(request, 'Le film {} a bien été enregistré dans votre liste de films sauvegardés'
+                         .format(movie_to_save.title))
     except IntegrityError as error:
         print(error)
         messages.warning(request, "Vous avez déjà enregistré ce film précédemment, "
