@@ -11,6 +11,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db import IntegrityError
+from django.contrib.postgres.search import TrigramSimilarity
+import django.contrib.postgres.search
 # Create your views here.
 
 
@@ -56,8 +58,10 @@ def search(request):
     if not query:
         movies = Movie.objects.all()
     else:
-        movies = Movie.objects.filter(title__icontains=query)
-
+        search_trigram = Movie.objects.annotate(similarity=TrigramSimilarity('title', query),)\
+                 .filter(similarity__gt=0.3).order_by('-similarity')
+        search_contain = Movie.objects.filter(title__icontains=query)
+        movies = search_trigram | search_contain
     return render(request, 'movies/pages/results.html', {'movies': movies, 'is_paginated': True, 'query': query})
 
 
